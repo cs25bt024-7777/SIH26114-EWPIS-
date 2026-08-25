@@ -10,7 +10,7 @@ The documentation folder is the project's source of truth.
 
 # 2. Project
 
-SIH26114 — Essential Commodity Price & Shortage Early Warning System.
+SIH26114 — Essential Commodity Price & Shortage Early Warning System (EWPIS).
 
 Goal:
 
@@ -22,27 +22,33 @@ Provide early detection of commodity price/shortage risks and support government
 
 Frontend:
 
-Next.js + TypeScript + Tailwind + shadcn/ui
+Next.js + TypeScript + Tailwind + shadcn/ui + Recharts
+
+The working Next.js application currently lives at:
+
+`SIH26114-EWPIS-/frontend`
+
+(the nested folder that already contained the App Router structure, shadcn primitives, and `node_modules`). The parent `frontend/` directory at the repository root was empty and was not duplicated.
 
 Backend:
 
-FastAPI
+FastAPI — **not connected in this phase**
 
 Database:
 
-Supabase PostgreSQL
+Supabase PostgreSQL — **not connected**
 
 Authentication:
 
-Supabase Auth
+Supabase Auth — **not implemented**
 
 ML:
 
-Python + Prophet + LightGBM + statistical anomaly detection
+Python + Prophet + LightGBM + statistical anomaly detection — **not connected**
 
 AI:
 
-Gemini
+Gemini — **not connected**
 
 ---
 
@@ -60,49 +66,46 @@ Do not change architecture, database schema or API contracts without approval.
 
 # 5. Current Development Stage
 
-Update this section whenever a major milestone is completed.
-
 Current stage:
 
-Documentation / Project Setup
+**Frontend prototype with local mock data**
 
 Completed:
 
-- GitHub repository created
-- Documentation structure created
-- Project context defined
-- Architecture defined
-- UI specification defined
-- Database schema defined
-- API contract defined
-- ML specification defined
+- GitHub repository / documentation structure (prior work)
+- Next.js frontend initialized (prior work)
+- Tailwind + shadcn/ui primitives (prior work)
+- Complete application shell (sidebar, header, responsive sheet nav)
+- Dashboard, commodities, alerts, locations, actions, settings pages
+- Consistent GREEN/YELLOW/ORANGE/RED risk model
+- Mock datasets and `lib/api.ts` abstraction
+- Historical price and forecast charts
+- Schematic regional risk board
+- `npm run lint` clean
+- `npm run build` successful
 
 ---
 
 # 6. Current Frontend Status
 
-Update this section during frontend development.
-
-Example:
-
-- [ ] Next.js initialized
-- [ ] Tailwind configured
-- [ ] shadcn/ui configured
-- [ ] Application layout
-- [ ] Login
-- [ ] Dashboard
-- [ ] Risk map
-- [ ] Commodity details
-- [ ] Alerts
-- [ ] Action Center
-- [ ] Mock data
-- [ ] API integration
+- [x] Next.js initialized
+- [x] Tailwind configured
+- [x] shadcn/ui configured
+- [x] Application layout
+- [ ] Login (intentionally deferred; UI_SPEC lists it, this phase did not add auth)
+- [x] Dashboard
+- [x] Risk map (schematic board, not Leaflet/geo boundaries)
+- [x] Commodity details (register + cards + risk factors)
+- [x] Alerts
+- [x] Action Center
+- [x] Mock data
+- [ ] API integration (FastAPI)
 
 ---
 
 # 7. Current Backend Status
 
-- [ ] FastAPI initialized
+- [ ] FastAPI initialized (out of scope for this pass)
 - [ ] API structure
 - [ ] Database connection
 - [ ] Dashboard endpoint
@@ -130,129 +133,143 @@ Example:
 
 ---
 
-# 9. AI Handoff Format
+# 9. What was implemented (this pass)
 
-When handing work from one AI assistant to another, provide:
+A government-oriented EWPIS frontend that reads only local mock data through `lib/api.ts`.
 
-### Current task
+Major product surfaces:
 
-Describe what is being implemented.
+- Root `/` redirects to `/dashboard`
+- Dashboard: risk overview (Stable / Watch / Moderate / Critical), schematic India risk board, critical alerts, historical prices, forecast, priority commodity cards, contributing factors
+- Commodities: search/filters, table + cards, risk factors
+- Alerts: filters (risk, commodity, location, status), labelled severity, empty states
+- Locations: regional board + state/district cards
+- Actions: decision-support recommendations with explicit “not an order” disclaimer
+- Settings: local/session UI only (profile, notifications, system info)
 
-### Files changed
+Risk model (centralized in `lib/risk.ts`):
 
-List files changed by the previous assistant.
-
-### Completed work
-
-Describe what works.
-
-### Remaining work
-
-Describe what still needs to be implemented.
-
-### Problems
-
-List known bugs or decisions that require attention.
-
-### Do not change
-
-List architecture/contracts that must remain unchanged.
+- 0–25 GREEN / Stable
+- 26–50 YELLOW / Watch
+- 51–75 ORANGE / Moderate
+- 76–100 RED / Critical
 
 ---
 
-# 10. Example Handoff
+# 10. Files created
 
-Current task:
+New application source (empty stubs were filled; `types/forecast.ts` replaced empty `types/forecast.cs`):
 
-Implement the dashboard UI.
+- `frontend/lib/risk.ts`
+- `frontend/lib/api.ts`
+- `frontend/lib/mock-data.ts`
+- `frontend/types/*.ts` (risk, commodity, alert, forecast)
+- `frontend/components/risk-badge.tsx`
+- `frontend/components/page-intro.tsx`
+- `frontend/app/*/loading.tsx`
+- `frontend/app/commodities/commodities-client.tsx`
+- `frontend/app/alerts/alerts-client.tsx`
+- `frontend/app/locations/locations-client.tsx`
+- `frontend/app/actions/actions-client.tsx`
+- `frontend/app/settings/settings-client.tsx`
 
-Files changed:
-
-- frontend/app/dashboard/page.tsx
-- frontend/components/dashboard/StatsCard.tsx
-
-Completed:
-
-- Dashboard layout
-- Statistics cards
-- Mock alert data
-
-Remaining:
-
-- Risk map
-- Commodity chart
-- Alert table
-
-Problems:
-
-- Map is not implemented yet.
-
-Do not change:
-
-- API contract
-- Database schema
-- Architecture
+Existing layout/page/component files under `frontend/` were implemented rather than replaced with a new Next.js project.
 
 ---
 
-# 11. AI Instruction
+# 11. Files modified
 
-AI coding assistants should:
+- `frontend/app/layout.tsx`, `frontend/app/page.tsx`, `frontend/app/globals.css`
+- `frontend/app/dashboard/page.tsx` and other route `page.tsx` files
+- `frontend/components/layout/*`
+- `frontend/components/dashboard/*`
+- `frontend/components/commodities/*`
+- `frontend/components/alerts/*`
+- `frontend/components/actions/*`
+- `frontend/lib/utils.ts`
+- `frontend/next.config.ts` (`turbopack.root` so the app is not confused with a home-directory lockfile)
+- `docs/HANDOFF.md` (this file)
 
-1. Read project documentation.
-2. Inspect the current repository.
-3. Understand existing implementation.
-4. Avoid unnecessary rewrites.
-5. Preserve existing architecture.
-6. Explain major changes before making them when requested.
-7. Update HANDOFF.md after completing a major task.
-
----
-
-# 12. Git Rules
-
-Use feature branches.
-
-Main branch:
-
-`main`
-
-Frontend branch:
-
-`frontend-development`
-
-ML branch:
-
-`ml-development`
-
-Backend branch may be created later.
-
-Do not directly make experimental changes on `main`.
+shadcn/ui primitives under `components/ui/` were reused, not rewritten.
 
 ---
 
-# 13. Commit Style
+# 12. Current frontend architecture
 
-Use clear commit messages.
+```
+app/page.tsx                → redirect /dashboard
+app/*/page.tsx              → route composition
+components/layout           → shell, sidebar, header
+components/dashboard        → summary, map, alerts, charts
+components/{commodities,alerts,actions}
+components/ui               → shadcn primitives
+lib/api.ts                  → only data boundary used by UI
+lib/mock-data.ts            → demonstration datasets
+lib/risk.ts                 → score → level/color/labels
+types/                      → shared TypeScript contracts
+```
 
-Examples:
-
-`feat: add dashboard layout`
-
-`feat: add commodity detail page`
-
-`feat: connect dashboard API`
-
-`fix: resolve alert filtering issue`
-
-`docs: update API contract`
-
-`refactor: simplify risk service`
+Pages stay thin. Interactive filters live in `*-client.tsx` files. Charts are client components (Recharts).
 
 ---
 
-# 14. Important Principle
+# 13. Current mock-data architecture
 
-The repository is the source of truth, not an individual AI conversation.
+`lib/mock-data.ts` is the single demonstration source:
 
-If switching from Claude to Cursor, Codex, Gemini or another assistant, the new assistant should read the repository documentation and current code before continuing.
+- commodities (onion, tomato, potato, rice, wheat, tur, sugar, mustard oil)
+- Indian markets/states/districts with lat/lng for a future map layer
+- risk assessments derived from scores
+- alerts and recommended actions
+- deterministic historical + forecast series
+
+`lib/api.ts` wraps those structures in `{ success, data, source: "mock" }` results. Components must not import mock arrays directly (except via `api`).
+
+Replace function bodies in `api.ts` later with `fetch` to FastAPI `/api/...` from `API_CONTRACT.md`.
+
+---
+
+# 14. Current limitations
+
+- Mock / synthetic numbers only; labelled as demonstration data
+- Risk map is a schematic state board, not official GIS boundaries
+- Leaflet is installed but unused in this phase
+- Charts use mock series labelled as ensemble demonstration, not live Prophet/LightGBM
+- Header search navigates to commodities; it does not query a backend
+- Settings state is in-memory in the browser
+- Parent repository `frontend/` folder remains empty; the runnable app is nested
+
+---
+
+# 15. Intentionally NOT implemented
+
+- FastAPI, Supabase, Gemini, Python ML
+- Login / Supabase Auth
+- Real government datasets (DoCA, Agmarknet, IMD)
+- Persistence of alert status changes
+- Automatic government orders or workflow execution
+- Production deployment configuration
+
+---
+
+# 16. Recommended next phase
+
+1. Confirm a single canonical `frontend/` location (move nested app to repo root `frontend/` if that is the intended layout).
+2. Stand up FastAPI stubs matching `API_CONTRACT.md` and swap `lib/api.ts` implementations.
+3. Add login per UI_SPEC (Supabase Auth) without changing the dashboard information architecture.
+4. Connect Leaflet/geojson when boundary data is available; keep the current `Location` lat/lng fields.
+5. Replace mock forecasts with ML outputs (Prophet/LightGBM) and keep Gemini for explanation text only.
+
+---
+
+# 17. Lint / build (this pass)
+
+- `npm run lint` — passed
+- `npm run build` — passed
+- Static routes generated: `/`, `/dashboard`, `/commodities`, `/alerts`, `/locations`, `/actions`, `/settings`
+
+---
+
+# 18. Git reminder
+
+Use feature branches (`frontend-development`). Do not treat experimental work as production. Do not claim backend/ML completeness.
